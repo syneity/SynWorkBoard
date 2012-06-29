@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>SyneITY Board</title>
+		<style type="text/css">
+			div.lane
+			{
+			float:left;
+			width:100px;
+			margin:10px;
+			padding:5px;
+			background-color:whiteSmoke;
+			}
+		</style>
+		<script src="js/jquery-1.4.2.min.js" type="text/javascript"></script>
+		<script src="js/knockout-2.1.0.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			$(function(){
+				alert('jq');
+				var vwMdlBoard = new VwMdlBoard();
+				var laneBackLog = vwMdlBoard.AddLane('Backlog');
+				laneBackLog.AddStory('add bug');
+				laneBackLog.AddStory('add test');
+				var laneVersion = vwMdlBoard.AddLane('Version 2.0');
+				laneVersion.AddStory('v 1');
+				laneVersion.AddStory('v 2');
+				var laneToday = vwMdlBoard.AddLane('Today');
+				laneToday.AddStory('today add a bug');
+				laneToday.AddStory('today add a bug 2');
+				laneToday.AddStory('today add a bug 3');
+				laneToday.AddStory('today add a bug 4');
+				var laneInProgress = vwMdlBoard.AddLane('In Progress');
+				laneInProgress.AddStory("Story 1");
+				laneInProgress.AddStory("Story 2");
+				laneInProgress.AddStory("Story 4");
+				laneInProgress.AddStory("Story 3");
+				vwMdlBoard.AddLane('Done');
+				ko.applyBindings(vwMdlBoard);
+			});
+			
+			function VwMdlBoard(){		
+				var _board = this;
+				this.Name = ko.observable("Board");
+				this.Lanes = ko.observableArray();
+				
+				this.AddLane = function(name)
+				{
+					var vwMdlLane = new VwMdlLane(name);
+					_board.Lanes.push(vwMdlLane);
+					return vwMdlLane;
+				}
+			}
+			function VwMdlLane(name){
+				var _lane = this;
+				this.Name = ko.observable(name);
+				this.Stories = ko.observableArray();
+				
+				this.AddStory = function(story){
+					var vwMdlUserStory = new VwMdlUserStory(story);
+					_lane.Stories.push(vwMdlUserStory);
+					return vwMdlUserStory;
+				}
+			}
+			function VwMdlUserStory(story){
+				this.Story = ko.observable(story);
+			}
+		</script>
+	</head>
+	<body>
+		<span data-bind="text:Name"></span>
+		<div id="board" data-bind="foreach:Lanes">
+			<div class="lane">
+				<span data-bind="text:Name"></span>	
+				<ul data-bind="foreach:Stories">
+					<li>
+						<span data-bind="text:Story"></span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>
